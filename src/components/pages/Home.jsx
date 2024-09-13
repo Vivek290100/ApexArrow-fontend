@@ -4,7 +4,6 @@ import MetricsGauges from "./MetricsGauges";
 import FeaturePage from "./Features";
 import Footer from "../common/Footer";
 import CategoryCarousel from "./CategoryCarousel";
-// import JobSearchLayout from "./JobSearchLayout"
 
 const Home = () => {
   return (
@@ -14,7 +13,6 @@ const Home = () => {
       <FeaturePage />
       <MetricsGauges />
       <Footer />
-      {/* <JobSearchLayout/> */}
     </>
   );
 };

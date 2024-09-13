@@ -12,12 +12,6 @@ const App = () => {
     <ThemeProvider>
       <div className="min-h-screen bg-light text-dark">
         <Navbar />
-        {/* <Job/> */}
-        {/* <Filter/> */}
-        {/* <Home /> */}
-        {/* <Login /> */}
-         {/* <SignUp /> */}
-        {/* <Carousel/> */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />

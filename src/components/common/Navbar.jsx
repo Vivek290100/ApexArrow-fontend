@@ -15,7 +15,7 @@ import { useTheme } from "../../context/ThemeContext.jsx";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const user = true; // Replace with actual user authentication logic
+  const user = false; // Replace with actual user authentication logic
   const { theme, toggleTheme } = useTheme();
 
   const toggleMenu = () => setIsOpen(!isOpen);

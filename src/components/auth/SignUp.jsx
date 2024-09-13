@@ -1,4 +1,8 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import {USER_API_ENDPOINT} from '@/utils/constant'
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -10,6 +14,8 @@ export default function SignUpPage() {
     profilePhoto: null,
   });
 
+  const navigate = useNavigate()
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -18,10 +24,33 @@ export default function SignUpPage() {
     setFormData({ ...formData, profilePhoto: e.target.files[0] });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    // Handle form submission here
+    // console.log(formData);
+    const data = new FormData()
+    data.append("fullName",formData.fullName)
+    data.append("email",formData.email)
+    data.append("password",formData.password)
+    data.append("phoneNumber",formData.phoneNumber)
+    data.append("role",formData.role)
+    if(formData.file){
+      data.append("profilePhoto",formData.profilePhoto)
+    }
+    try {
+      const res = await axios.post(`${USER_API_ENDPOINT}/register`,data,{
+        header:{
+          'Content-Type': 'multipart/form-data'
+        },
+        withCredentials:true
+      })
+      if(res.data.success){
+        navigate('/login')
+        toast.success(res.data.message)
+      }
+    }catch(error) {
+      console.log(error);
+      toast.error(error.response.data.message)
+    }
   };
 
   return (
@@ -38,9 +67,6 @@ export default function SignUpPage() {
 
       <div className="lg:w-1/2 flex flex-col justify-center p-8 bg-card">
         <div className="max-w-md w-full mx-auto ">
-          {/* <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2> */}
 
           <form className=" space-y-6 bg-card" onSubmit={handleSubmit}>
             <div>
@@ -179,7 +205,7 @@ export default function SignUpPage() {
                         onChange={handleFileChange}
                       />
                     </label>
-                    <p className="pl-1">or drag and drop</p>
+                    <p className="pl-1">your photo</p>
                   </div>
                   {/* <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p> */}
                 </div>
@@ -193,6 +219,7 @@ export default function SignUpPage() {
               >
                 Sign up
               </button>
+              <span className="text-sm text-violet-500"><Link to='/login'>already have an account? Login</Link></span>
             </div>
           </form>
         </div>

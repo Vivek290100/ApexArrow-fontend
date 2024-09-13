@@ -1,27 +1,39 @@
+import axios from 'axios';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-export default function SignUpPage() {
+export default function LoginPage() {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
-    phoneNumber: '',
     role: 'student',
-    profilePhoto: null,
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, profilePhoto: e.target.files[0] });
-  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-    // Handle form submission here
+
+    try {
+      const res = await axios.post(`${USER_API_ENDPOINT}/login`,{
+        header:{
+          'Content-Type': 'application/json'
+        },
+        withCredentials:true
+      })
+      if(res.data.success){
+        navigate('/')
+        Toaster.success(res.data.message)
+      }
+    }catch(e) {
+      console.error(e);
+      // Handle form submission errors here
+    }
   };
 
   return (
@@ -116,6 +128,8 @@ export default function SignUpPage() {
               >
                 Login
               </button>
+              <span className="text-sm text-violet-500"><Link to='/signup'>don't have an account? Signup</Link></span>
+
             </div>
           </form>
         </div>
