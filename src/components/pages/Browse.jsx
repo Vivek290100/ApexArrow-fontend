@@ -2,13 +2,11 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {CiBookmark} from 'react-icons/ci'
-import { useNavigate } from 'react-router-dom';
+import Navbar from '../common/Navbar';
 
-const JobCard = ({ company, logo, title, description, positions, type, salary, daysAgo }) => {
-  const navigate = useNavigate()
-  const jobId = "7346go8yg34873g8o47gr8p39"
+const Browse = ({ company, logo, title, description, positions, type, salary, daysAgo }) => {
   return (
-    <Card className=" hover:shadow-lg transition-shadow duration-300">
+    <Card className=" hover:shadow-lg transition-shadow duration-300 ">
       <CardHeader className="flex flex-row justify-between items-start">
         <div className="flex items-center">
           <img src={logo} alt={company} className="w-10 h-10 mr-3 rounded-full" />
@@ -29,7 +27,7 @@ const JobCard = ({ company, logo, title, description, positions, type, salary, d
             <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">{salary}</span>
           </div>
           <div className="space-x-2 mt-2 sm:mt-0">
-            <Button onClick = {()=>navigate(`/description/${jobId}`)} variant="outline" size="sm">Details</Button>
+            <Button variant="outline" size="sm">Details</Button>
             <Button variant="secondary" size="sm"><CiBookmark/></Button>
           </div>
         </div>
@@ -145,12 +143,19 @@ const Job = () => {
   ];
 
   return (
-
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-      {jobs.map((job, index) => (
-        <JobCard key={index} {...job} />
-      ))}
+    <>
+    <div className='container px-8 py-24 mx-auto '>
+      <span className="text-lg font-semibold md:text-xl lg:text-2x2 ">
+        Search Results ({jobs.length})
+      </span>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+        {jobs.map((job, index) => (
+          <Browse key={index} {...job} />
+        ))}
+      </div>
     </div>
+  </>
+  
   );
 };
 

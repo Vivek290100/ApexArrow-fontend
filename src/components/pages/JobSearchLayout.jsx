@@ -11,8 +11,10 @@ const JobSearchLayout = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
+    <div>
+{/* <Navbar /> */}
     <div className="bg-card-100 min-h-screen">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="pt-20 px-4 sm:px-6 lg:px-8">
         <div className="md:hidden my-4">
           <Button onClick={toggleSidebar} className="w-full flex justify-between items-center">
@@ -30,6 +32,8 @@ const JobSearchLayout = () => {
         </div>
       </div>
     </div>
+    </div>
+
   );
 };
 

@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import {USER_API_ENDPOINT} from '@/utils/constant'
+import { Loader } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import store from "@/redux/store";
+import { setLoading } from "@/redux/aurhSlice";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -14,6 +18,8 @@ export default function SignUpPage() {
     profilePhoto: null,
   });
 
+  const {loading} = useSelector(store=>store.auth)
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const handleChange = (e) => {
@@ -33,12 +39,13 @@ export default function SignUpPage() {
     data.append("password",formData.password)
     data.append("phoneNumber",formData.phoneNumber)
     data.append("role",formData.role)
-    if(formData.file){
+    if(formData.profilePhoto){
       data.append("profilePhoto",formData.profilePhoto)
     }
     try {
+      dispatch(setLoading(true));
       const res = await axios.post(`${USER_API_ENDPOINT}/register`,data,{
-        header:{
+        headers:{
           'Content-Type': 'multipart/form-data'
         },
         withCredentials:true
@@ -50,6 +57,8 @@ export default function SignUpPage() {
     }catch(error) {
       console.log(error);
       toast.error(error.response.data.message)
+    }finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -65,7 +74,7 @@ export default function SignUpPage() {
         />
       </div>
 
-      <div className="lg:w-1/2 flex flex-col justify-center p-8 bg-card">
+      <div className="lg:w-1/2 flex flex-col justify-center p-8 mt-8 bg-card">
         <div className="max-w-md w-full mx-auto ">
 
           <form className=" space-y-6 bg-card" onSubmit={handleSubmit}>
@@ -213,12 +222,18 @@ export default function SignUpPage() {
             </div>
 
             <div>
+            {
+                loading? (
+                  <button className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-yellow-400 to-violet-700  hover:bg-gradient-to-r"><Loader className="mr-2 h-5 w-5 animate-spin">please wait</Loader></button>
+                ) : (
+
               <button
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-yellow-400 to-violet-700  hover:bg-gradient-to-r"
               >
-                Sign up
+                Signup
               </button>
+                )}
               <span className="text-sm text-violet-500"><Link to='/login'>already have an account? Login</Link></span>
             </div>
           </form>
@@ -228,7 +243,7 @@ export default function SignUpPage() {
   );
 }
 
-{
+// {
   /* <div>
               <label htmlFor="bio" className="block text-sm font-medium text-gray-700">
                 Bio
@@ -293,4 +308,4 @@ export default function SignUpPage() {
                 </div>
               </div>
             </div> */
-}
+// }

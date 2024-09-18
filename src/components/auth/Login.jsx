@@ -1,38 +1,50 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import axios from "axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { USER_API_ENDPOINT } from "@/utils/constant";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "@/redux/aurhSlice";
+import store from "@/redux/store";
+import { Loader } from "lucide-react";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    role: 'student',
+    fullName: "",
+    email: "",
+    password: "",
+    role: "student",
   });
+
+  const { loading } = useSelector((store) => store.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
 
     try {
-      const res = await axios.post(`${USER_API_ENDPOINT}/login`,{
-        header:{
-          'Content-Type': 'application/json'
+      dispatch(setLoading(true));
+      const res = await axios.post(`${USER_API_ENDPOINT}/login`, formData, {
+        header: {
+          "Content-Type": "application/json",
         },
-        withCredentials:true
-      })
-      if(res.data.success){
-        navigate('/')
-        Toaster.success(res.data.message)
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        navigate("/");
+        toast.success(res.data.message);
       }
-    }catch(e) {
-      console.error(e);
-      // Handle form submission errors here
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -54,10 +66,11 @@ export default function LoginPage() {
           </h2> */}
 
           <form className=" space-y-6 " onSubmit={handleSubmit}>
-            
-
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-400">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-400"
+              >
                 Email address
               </label>
               <input
@@ -71,7 +84,10 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-400">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-400"
+              >
                 Password
               </label>
               <input
@@ -84,52 +100,62 @@ export default function LoginPage() {
               />
             </div>
 
-            
+            <div>
+              <label className="block text-sm font-medium text-gray-400">
+                Role
+              </label>
+              <div className="mt-1 justify-evenly flex">
+                <div className="flex items-center">
+                  <input
+                    id="student"
+                    name="role"
+                    type="radio"
+                    value="student"
+                    className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
+                    onChange={handleChange}
+                  />
+                  <label
+                    htmlFor="student"
+                    className="ml-3 block text-sm font-medium text-gray-400"
+                  >
+                    Student
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="recruiter"
+                    name="role"
+                    type="radio"
+                    value="recruiter"
+                    className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
+                    onChange={handleChange}
+                  />
+                  <label
+                    htmlFor="recruiter"
+                    className="ml-3 block text-sm font-medium text-gray-400"
+                  >
+                    Recruiter
+                  </label>
+                </div>
+              </div>
+            </div>
 
             <div>
-          <label className="block text-sm font-medium text-gray-400">
-            Role
-          </label>
-          <div className="mt-1 justify-evenly flex">
-            <div className="flex items-center">
-              <input
-                id="student"
-                name="role"
-                type="radio"
-                value="student"
-                className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
-                onChange={handleChange}
-              />
-              <label htmlFor="student" className="ml-3 block text-sm font-medium text-gray-400">
-                Student
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                id="recruiter"
-                name="role"
-                type="radio"
-                value="recruiter"
-                className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
-                onChange={handleChange}
-              />
-              <label htmlFor="recruiter" className="ml-3 block text-sm font-medium text-gray-400">
-                Recruiter
-              </label>
-            </div>
-          </div>
-        </div>
+              {
+                loading? (
+                  <button className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-yellow-400 to-violet-700  hover:bg-gradient-to-r"><Loader className="mr-2 h-5 w-5 animate-spin"></Loader></button>
+                ) : (
 
-
-            <div>
               <button
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-yellow-400 to-violet-700  hover:bg-gradient-to-r"
               >
                 Login
               </button>
-              <span className="text-sm text-violet-500"><Link to='/signup'>don't have an account? Signup</Link></span>
-
+                )}
+              <span className="text-sm text-violet-500">
+                <Link to="/signup">don't have an account? Signup</Link>
+              </span>
             </div>
           </form>
         </div>
