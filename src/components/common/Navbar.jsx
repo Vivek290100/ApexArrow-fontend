@@ -28,13 +28,13 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <h1 className="text-xl sm:text-2xl text-yellow-400 font-serif cursor-pointer relative">
-              <span className="text-yellow-400 text-shadow-glow relative z-10">
+              <span className="text-yellow-400  relative z-10">
                 Apex
               </span>{" "}
               <span className="text-violet-700 relative z-10 text-shadow-glow">
                 Arrow
               </span>
-              <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-violet-400 via-pink-500 to-yellow-400 opacity-20 rounded-lg blur-sm animate-pulse"></span>
+              {/* <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-violet-400 via-pink-500 to-yellow-400 opacity-20 rounded-lg blur-sm "></span> */}
             </h1>
           </div>
 

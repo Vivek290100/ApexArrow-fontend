@@ -4,6 +4,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const Home = () => {
+  
   const category = [
     "Frontend Developer",
     "Backend Developer",

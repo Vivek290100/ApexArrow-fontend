@@ -4,13 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { USER_API_ENDPOINT } from "@/utils/constant";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "@/redux/aurhSlice";
+import { setLoading, setUser } from "@/redux/aurhSlice";
 import store from "@/redux/store";
 import { Loader } from "lucide-react";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
-    fullName: "",
+    // fullName: "",
     email: "",
     password: "",
     role: "student",
@@ -37,6 +37,7 @@ export default function LoginPage() {
         withCredentials: true,
       });
       if (res.data.success) {
+        dispatch(setUser(res.data.user));
         navigate("/");
         toast.success(res.data.message);
       }

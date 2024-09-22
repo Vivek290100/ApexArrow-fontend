@@ -40,7 +40,7 @@ export default function SignUpPage() {
     data.append("phoneNumber",formData.phoneNumber)
     data.append("role",formData.role)
     if(formData.profilePhoto){
-      data.append("profilePhoto",formData.profilePhoto)
+      data.append("file",formData.profilePhoto)
     }
     try {
       dispatch(setLoading(true));

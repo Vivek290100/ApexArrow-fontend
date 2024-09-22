@@ -1,21 +1,24 @@
 import React, { useState } from "react";
 import { User, Mail, Phone, Briefcase, FileText, MapPin } from "lucide-react";
 import { FaEdit } from "react-icons/fa";
+import UpdateProfileModal from './UpdateProfileModal'
+import { useSelector } from "react-redux";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const ProfilePage = () => {
   const [open, setOpen] = useState(false);
-
-  const profile = {
-    name: "John Doe",
-    description:
-      "Experienced software developer with a passion for creating efficient and scalable applications.",
-    email: "john.doe@example.com",
-    mobile: "+1 (555) 123-4567",
-    location: "San Francisco, CA",
-    skillsets: ["React", "Node.js", "Python", "SQL", "AWS"],
-    resume: "link-to-resume.pdf",
-    jobRole: "Senior Software Engineer",
-  };
+  const { user } = useSelector((store) => store.auth);
 
   const appliedJobs = [
     {
@@ -38,130 +41,105 @@ const ProfilePage = () => {
     },
   ];
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Under Review":
+        return "bg-yellow-100 text-yellow-800";
+      case "Interviewed":
+        return "bg-green-100 text-green-800";
+      case "Rejected":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
-    <div className="container mx-auto p-6 lg:p-12 py-24">
-      <div className="bg-card overflow-hidden">
-        <div className="flex flex-col lg:flex-row">
-          <div className="lg:w-1/3 bg-card p-6 lg:p-8 flex flex-col items-center justify-center">
-            <img
-              src="/src/assets/image.png"
-              alt={`Profile of ${profile.name}`}
-              className="rounded-full w-32 h-32 lg:w-48 lg:h-48 object-cover border-4 border-white shadow-lg"
-            />
-            <div className="flex flex-col items-center mt-4">
-              <h1 className="text-xl lg:text-2xl font-bold text-center">
-                {profile.name}
-              </h1>
-              <div className="flex items-center mt-2 text-blue-500 cursor-pointer">
-                <span>Edit Profile</span>
-                <FaEdit onClick={()=>setOpen(true)} className="w-5 h-5 ml-2" />
-              </div>
+    <div className="container mx-auto p-6 space-y-6 mt-14">
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="md:w-1/3 flex flex-col items-center">
+              <Avatar className="w-32 h-32 mb-4">
+                <AvatarImage src="/src/assets/image.png" alt={`Profile of ${user.fullName}`} />
+                <AvatarFallback>{user.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+              </Avatar>
+              <h1 className="text-2xl font-bold text-center mb-2">{user.fullName}</h1>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+                onClick={() => setOpen(true)}
+              >
+                <FaEdit className="w-4 h-4" />
+                Edit Profile
+              </Button>
             </div>
-            <p className="text-gray-600 text-center mt-2">{profile.jobRole}</p>
-            <div className="flex items-center mt-2 text-gray-600">
-              <MapPin className="w-4 h-4 mr-1" />
-              <span>{profile.location}</span>
-            </div>
-          </div>
-
-          <div className="lg:w-2/3 p-6 lg:p-8">
-            <h2 className="text-lg lg:text-xl font-semibold mb-4">About Me</h2>
-            <p className="text-gray-600 mb-6">{profile.description}</p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="flex items-center">
-                <Mail className="w-5 h-5 mr-2 text-gray-500" />
-                <span>{profile.email}</span>
+            <div className="md:w-2/3">
+              <h2 className="text-xl font-semibold mb-3">About Me</h2>
+              <p className="text-gray-600 mb-4">{user.profile.bio}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-gray-500" />
+                  <span>{user.email}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="w-5 h-5 text-gray-500" />
+                  <span>{user.phoneNumber}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-gray-500" />
+                  <a href="#" className="text-blue-500 hover:underline">
+                    View Resume
+                  </a>
+                </div>
               </div>
-              <div className="flex items-center">
-                <Phone className="w-5 h-5 mr-2 text-gray-500" />
-                <span>{profile.mobile}</span>
-              </div>
-              <div className="flex items-center">
-                <FileText className="w-5 h-5 mr-2 text-gray-500" />
-                <a
-                  href={profile.resume}
-                  className="text-blue-500 hover:underline"
-                >
-                  View Resume
-                </a>
-              </div>
-            </div>
-
-            <h2 className="text-lg lg:text-xl font-semibold mb-2">Skills</h2>
-            <div className="flex flex-wrap gap-2 mb-6">
-              {profile.skillsets.map((skill, index) => (
-                <span
-                  key={index}
-                  className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs lg:text-sm"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-8">
-        <h2 className="text-xl lg:text-2xl font-bold mb-4 px-16">
-          Applied Jobs
-        </h2>
-        <div className="overflow-x-auto">
-          <div className="max-w-6xl lg:max-w-7xl mx-auto">
-            {" "}
-            {/* Adjusted width here */}
-            <table className="w-full bg-card shadow-lg rounded-lg overflow-hidden">
-              <thead className="bg-card">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Job Role
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Company
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {appliedJobs.map((job, index) => (
-                  <tr key={index}>
-                    <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
-                      {job.date}
-                    </td>
-                    <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
-                      {job.jobRole}
-                    </td>
-                    <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
-                      {job.company}
-                    </td>
-                    <td className="px-4 py-4 text-sm lg:text-base whitespace-nowrap">
-                      <span
-                        className={`px-2 inline-flex text-xs lg:text-sm leading-5 font-semibold rounded-full ${
-                          job.status === "Under Review"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : job.status === "Interviewed"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {job.status}
-                      </span>
-                    </td>
-                  </tr>
+              <h2 className="text-xl font-semibold mb-3">Skills</h2>
+              <div className="flex flex-wrap gap-2">
+                {user.profile.skills.map((skill, index) => (
+                  <Badge key={index} variant="secondary">
+                    {skill}
+                  </Badge>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      <updateProfileModal open={open} setOpen={setOpen}/>
+      <Card>
+        <CardHeader>
+          <h2 className="text-2xl font-bold">Applied Jobs</h2>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Job Role</TableHead>
+                <TableHead>Company</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {appliedJobs.map((job, index) => (
+                <TableRow key={index}>
+                  <TableCell>{job.date}</TableCell>
+                  <TableCell>{job.jobRole}</TableCell>
+                  <TableCell>{job.company}</TableCell>
+                  <TableCell>
+                    <Badge className={getStatusColor(job.status)}>
+                      {job.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      <UpdateProfileModal open={open} setOpen={setOpen} />
     </div>
   );
 };
