@@ -10,17 +10,40 @@ import { CiUser } from "react-icons/ci";
 import { FiMenu, FiSun, FiMoon } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
 import { Button } from "../ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext.jsx";
+import { toast } from "sonner";
+import { USER_API_ENDPOINT } from "@/utils/constant";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { setUser } from "@/redux/aurhSlice";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const user = true;
+  // const user = true;
   const { theme, toggleTheme } = useTheme();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const location = useLocation();
+
+  const { user } = useSelector(store => store.auth);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const logoutHandler = async () =>{
+    try{
+        const res = await axios.get(`${USER_API_ENDPOINT}/logout`,{withCredentials:true})
+        if(res.data.success){
+          dispatch(setUser(null))
+          navigate("/")
+          toast.success("logout successfully")
+        }
+    }catch(error){
+      console.log(error);
+      toast.error(error.response.data.message)
+      
+    }
+  }
 
   return (
     <nav className="bg-card text-card-foreground fixed w-full z-50 py-1">
@@ -123,13 +146,13 @@ const Navbar = () => {
               <Popover>
                 <PopoverTrigger asChild>
                   <Avatar className="cursor-pointer">
-                    <AvatarImage src="/src/assets/image.png" />
+                    <AvatarImage src={user?.profile?.profilePhoto} />
                   </Avatar>
                 </PopoverTrigger>
                 <PopoverContent className="w-72 rounded-lg shadow-lg border p-4 card-foreground mt-4">
                   <div className="flex items-center gap-4">
                     <Avatar className="w-12 h-12 rounded-full cursor-pointer">
-                      <AvatarImage src="/src/assets/image.png" />
+                      <AvatarImage src={user?.profile?.profilePhoto} />
                     </Avatar>
                     <div>
                       <h4 className="font-semibold text-lg primary">
@@ -149,7 +172,7 @@ const Navbar = () => {
                     </div>
                     <div className="flex items-center gap-1">
                       <IoIosLogOut size="25px" className="mt-[3px] ml-[60px]" />
-                      <Button variant="Link">Logout</Button>
+                      <Button onClick={logoutHandler} variant="Link">Logout</Button>
                     </div>
                   </div>
                 </PopoverContent>

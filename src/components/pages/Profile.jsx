@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { User, Mail, Phone, Briefcase, FileText, MapPin } from "lucide-react";
 import { FaEdit } from "react-icons/fa";
-import UpdateProfileModal from './UpdateProfileModal'
+import UpdateProfileModal from "./UpdateProfileModal";
 import { useSelector } from "react-redux";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -61,10 +61,20 @@ const ProfilePage = () => {
           <div className="flex flex-col md:flex-row gap-6">
             <div className="md:w-1/3 flex flex-col items-center">
               <Avatar className="w-32 h-32 mb-4">
-                <AvatarImage src="/src/assets/image.png" alt={`Profile of ${user.fullName}`} />
-                <AvatarFallback>{user.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                <AvatarImage
+                  src="/src/assets/image.png"
+                  alt={`Profile of ${user.fullName}`}
+                />
+                <AvatarFallback>
+                  {user.fullName
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </AvatarFallback>
               </Avatar>
-              <h1 className="text-2xl font-bold text-center mb-2">{user.fullName}</h1>
+              <h1 className="text-2xl font-bold text-center mb-2">
+                {user.fullName}
+              </h1>
               <Button
                 variant="outline"
                 size="sm"
@@ -89,8 +99,9 @@ const ProfilePage = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <FileText className="w-5 h-5 text-gray-500" />
-                  <a href="#" className="text-blue-500 hover:underline">
-                    View Resume
+                  <a href={user?.profile?.resume}
+                   className="text-blue-500 hover:underline">
+                    {user?.profile?.resumeOriginalName || 'Download Resume'}
                   </a>
                 </div>
               </div>
